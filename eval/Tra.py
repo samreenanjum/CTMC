@@ -58,7 +58,6 @@ class TRA:
     * or collection with single item (of -1 value) if no such label was found.
     '''
     def getResMatch(self, level, lbl):
-        #print("lbl = {}".format(lbl))
         idx = level.res_findLabel(lbl)
         if (idx != -1):
             return (level.m_res_match[idx])
@@ -76,24 +75,24 @@ class TRA:
     
     '''
     def existGTEdge(self, levels, start_level, start_index, end_level, end_index, tracks, parental):
-        #//reasonable label indices? existing labels?
+        # reasonable label indices? existing labels?
         if (start_index != -1 and end_index != -1):
             
-            #// get labels at given times at given indices
+            #  get labels at given times at given indices
             start_label = levels[start_level].m_gt_lab[start_index]
             end_label = levels[end_level].m_gt_lab[end_index]
-            #//check the type of the edge
+            # check the type of the edge
             if(start_label==end_label):
-                #// the edge connects nodes from the same track,
-                #// are the nodes temporal consecutive? is it really an edge?
+                # the edge connects nodes from the same track,
+                # are the nodes temporal consecutive? is it really an edge?
                 if ((start_level + 1) == end_level):
-                    parental[0] = False #//same track, can't be a parental link
+                    parental[0] = False # same track, can't be a parental link
                     return True
             else:
-                #// the edge connects two tracks, get them...
+                # the edge connects two tracks, get them...
                 parent = tracks[start_label]
                 child = tracks[end_label]
-                #//is the edge correctly connecting two tracks?
+                # is the edge correctly connecting two tracks?
                 if (parent.m_end == start_level and child.m_begin == end_level and child.m_parent == start_label):
                     parental[0] = True;
                     return True;
@@ -105,17 +104,17 @@ class TRA:
     '''
     '''
     def existResEdge(self, levels, start_level, start_index, end_level, end_index, tracks):
-        #//reasonable label indices? existing labels?
-	#//do start and end labels/nodes have 1:1 matching?
+        # reasonable label indices? existing labels?
+	# do start and end labels/nodes have 1:1 matching?
         if (start_index != -1 and end_index != -1
 	    and len(levels[start_level].m_res_match[start_index]) == 1
 	    and len(levels[end_level].m_res_match[end_index]) == 1):
             
-            #// get labels at given times at given indices
+            # get labels at given times at given indices
             start_label = levels[start_level].m_res_lab[start_index]
             end_label = levels[end_level].m_res_lab[end_index]
 
-            #check the type of the edge
+            # check the type of the edge
             if (start_label == end_label):
                 # the edge connects nodes from the same track,
                 # are the nodes temporal consecutive? is it really an edge?
@@ -125,7 +124,7 @@ class TRA:
                 parent = tracks[start_label]
                 child = tracks[end_label]
 
-                #is the edge correctly connecting two tracks?
+                # is the edge correctly connecting two tracks?
                 return (parent.m_end == start_level and child.m_begin == end_level and child.m_parent == start_label)
         # default
         return False
@@ -137,7 +136,7 @@ class TRA:
     def findEDAndECEdges(self, levels, gt_tracks, res_tracks):
         parent = [False]
 
-        #over all tracks/labels present in the result data
+        # over all tracks/labels present in the result data
         for key in res_tracks:
             # key is the label id
             # shortcut to track data
@@ -147,7 +146,6 @@ class TRA:
 
             #A:
             end_level = int(res_track.m_begin)
-            print("key = {}, end_level = {}, len of levels = {}".format(key, end_level, len(levels)))
             end_match = self.getResMatch(levels[end_level], key)
 
             #`does this track have a parent?
@@ -165,12 +163,10 @@ class TRA:
                         if(parent[0]==False):
                             #it does not connect different tracks, that's an error
                             self.aogm += self.penalty.m_ec
-                            print("aogm: = {}, penalty.ec = {}".format(self.aogm, self.penalty.m_ec))
                             ## TODO: add log code
                     else:
                         #there is no corresponding edge in GT, that's an error
                         self.aogm += self.penalty.m_ed
-                        print("aogm: = {}, penalty.ed = {}".format(self.aogm, self.penalty.m_ed))
                         ## TODO: add log code
 
             ## check edges within the current track
@@ -180,7 +176,6 @@ class TRA:
                 start_level = end_level
                 start_match = end_match
                 end_level = i+1
-                #print("end_level = {}, len of levels = {}, res_track.m_end = {}".format(end_level, len(levels), res_track.m_end))
                 end_match = self.getResMatch(levels[end_level], key)
 
                 #*_match contain lists of indices of GT labels that matches
@@ -191,13 +186,13 @@ class TRA:
                         if(parent[0]==True):
                             #it is parental, that's an error
                             self.aogm +=self.penalty.m_ec
-                            print("aogm: = {}, penalty.ec = {}".format(self.aogm, self.penalty.m_ec))
+                            
                             ## TODO: add log code
 
                     else:
                         #there is no corresponding edge in GT, that's an error
                         self.aogm += self.penalty.m_ed
-                        print("aogm: = {}, penalty.ed = {}".format(self.aogm, self.penalty.m_ed))
+                        
                         ## TODO: add log code
 
 
@@ -227,7 +222,7 @@ class TRA:
                 if( not self.existResEdge(levels, start_level, start_index, end_level, end_index, res_tracks)):
                     #... but there is no edge between them, that's an error
                     self.aogm += self.penalty.m_ea
-                    print("aogm: = {}, penalty.ea = {}".format(self.aogm, self.penalty.m_ea))
+                    
                     ## TODO: add log code
 
 
@@ -237,8 +232,6 @@ class TRA:
                 start_level = end_level
                 start_index = end_index
                 end_level = i + 1
-                #print("key/gt = {}, end_level = {}".format(key, end_level))
-                #print(levels[end_level])
 
                 end_index = self.getGTMatch(levels[end_level], gt_track_id)
 
@@ -246,7 +239,7 @@ class TRA:
                 if (not self.existResEdge(levels, start_level, start_index, end_level, end_index, res_tracks)):
                     #... but there is no edge between them, that's an error
                     self.aogm +=self.penalty.m_ea
-                    print("aogm: = {}, penalty.ea = {}".format(self.aogm, self.penalty.m_ea))
+                    
                     ## TODO: add log code
 
                     
@@ -274,12 +267,11 @@ class TRA:
         for key in levels:
             level = levels[key] 
             #sweep over all gt labels
-            #print("level - gt_lab: {} ".format(level.m_gt_lab))
             for i in range(len(level.m_gt_lab)):                #check if we have found corresponding res label
                 if(level.m_gt_match[i] == -1):
                     #no correspondence -> the gt label represents FN (false negative) case
                     self.aogm += self.penalty.m_fn
-                    print("aogm: = {}, penalty.fn = {}".format(self.aogm, self.penalty.m_fn))
+                    
                     ## TODO: add log code
 
 
@@ -287,29 +279,26 @@ class TRA:
             for j in range(len(level.m_res_lab)):
                 #number of overlapping gt labels
                 num = len(level.m_res_match[j])
-                #print("num = {}, res_label = {}, len ofgt matches = {}".format(num, level.m_res_lab, len(level.m_res_match[j])))
                 if (num==0):
                     #no label -- too few
                     self.aogm += self.penalty.m_fp
-                    print("aogm: = {}, penalty.fp = {}".format(self.aogm, self.penalty.m_fp))
+                    
                     ## TODO: add log code
 
                 elif (num>1):
                     #too many labels...
                     self.aogm +=(num-1) *self.penalty.m_ns
-                    print("aogm: = {}, penalty.ns = {}, num = {}".format(self.aogm, self.penalty.m_ns, num))
+                    
                     ## TODO: add log code
                     self.max_split = num if num > self.max_split else self.max_split
 
                 else:
                     continue
-                    #print("")
-                    #print("num==1, reslabel = {}, num = {}".format(level.m_res_match[j], num))
-                    ## TODO: add log code
+                ## TODO: add log code
 
         #check the minimality condition
         if((self.max_split - 1) * self.penalty.m_ns > (self.penalty.m_fp + self.max_split * self.penalty.m_fn)):
-            print("error: minimality condition")
+            
             ## TODO: log code
 
         self.findEDAndECEdges(levels, gt_tracks, res_tracks)
@@ -337,10 +326,10 @@ class TRA:
 
             # 
             self.aogm = aogm_empty if self.aogm > aogm_empty else self.aogm
-            print("aogm: = {}".format(self.aogm))
+            
             #normalization
             self.aogm = 1.0-(self.aogm/aogm_empty)
-            print("aogm: = {}, aogm_empty".format(self.aogm, aogm_empty))
+            
 
             ## TODO: add log data
 

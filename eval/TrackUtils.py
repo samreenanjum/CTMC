@@ -1,3 +1,11 @@
+######################
+#
+#  Adapted from:
+#  https://github.com/CellTrackingChallenge/CTC-FijiPlugins/blob/master/CTC-paper/src/main/java/de/mpicbg/ulman/ctc/workers/TrackDataCache.java
+#  
+######################
+
+
 import sys
 import numpy as np
 import pandas as pd

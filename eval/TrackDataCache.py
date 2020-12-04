@@ -1,3 +1,12 @@
+######################
+#
+#  Adapted from:
+#  https://github.com/CellTrackingChallenge/CTC-FijiPlugins/blob/master/CTC-paper/src/main/java/de/mpicbg/ulman/ctc/workers/TrackDataCache.java
+#  https://github.com/cheind/py-motmetrics
+######################
+
+
+
 import sys
 import numpy as np
 import pandas as pd
@@ -58,23 +67,20 @@ class TrackDataCache:
     #@timing
     def calculate (self, gtPath, resPath):
 
-        self.loadTrackFile("data/3T3-run04/man_track.txt", self.gt_tracks)
-        self.loadTrackFile("data/3T3-run04/3T3-run04_track.txt", self.res_tracks)
-        #TODO: uncomment fill the tracks data
-        #self.loadTrackFile("man_track.txt", self.gt_tracks);
+        ## for temp testing
+        #self.loadTrackFile("data/", self.gt_tracks)
+        #self.loadTrackFile("data/", self.res_tracks)
+               
+       
+        self.loadTrackFile(gtPath+"/TRA/man_track.txt", self.gt_tracks);
+	self.loadTrackFile(resPath+"/res_track.txt", self.res_tracks);
         
-        print(len(self.gt_tracks))
-        #self.loadTrackFile(gtPath+"/TRA/man_track.txt", self.gt_tracks);
-	#self.loadTrackFile(resPath+"/res_track.txt", self.res_tracks);
-        
-        time = 1 ## TODO: check again (starting frame counter)
+        time = 1 ## start frame counter
 
         ## Read the MOT annotation files into dataframes
         df_gt = self.load_txt(gtPath)
         df_res = self.load_txt(resPath)
 
-        print("size of gt = {}".format(df_gt.shape))
-        print("size of res = {}".format(df_res.shape))
         
         ## Total number of frames
         allframeids = df_gt.index.union(df_res.index).levels[0]
@@ -89,7 +95,6 @@ class TrackDataCache:
                                       widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
         bar.start()
         
-        #print(df_gt["FrameId"].head())
        
         ## for each frame
         distfields = ['X', 'Y', 'Width', 'Height']
@@ -110,19 +115,6 @@ class TrackDataCache:
                 time = time+1
                 continue
             
-            
-            #df_gt_frame = df_gt[df_gt['FrameId']==time]
-            #df_res_frame = df_res[df_res['FrameId']==time]
-            '''
-            print("fid {}".format(fid))
-            print("size of gt {}".format(len(fgt)))
-            print(fgt.head())
-
-            print("size of gt {}".format(len(fdt)))
-            print(fdt.head())
-            '''
-                  
-            #self.classifyLabels(fgt, fdt, time);
             self.classifyLabels(fgt, fdt, fid);
             time =time+1
 
@@ -131,11 +123,11 @@ class TrackDataCache:
         #self.detect_forks(self.res_tracks,  self.res_forks);
         bar.finish()
 
-        #TODO: calculate all forks -- branching events
-        #self.detect_forks(self.gt_tracks,  self.gt_forks); ## TODO: testing of this function and complete the remaining half
-	#DetectForks(res_tracks, res_forks);
 
 
+    '''
+    Adapted from: https://github.com/cheind/py-motmetrics/blob/d261d16cca263125b135571231011ccf9efd082b/motmetrics/io.py
+    '''    
     def load_txt(self, fname, **kwargs):
         r"""Load MOT challenge data.
         Params
@@ -194,78 +186,22 @@ class TrackDataCache:
         level.m_gt_lab =  df_gt.index.get_level_values('Id').unique()
         ## get the unique list of res labels
         level.m_res_lab = df_res.index.get_level_values('Id').unique()
-        #print("unique labels, time= {}, gt = {}, res = {}".format(time, level.m_gt_lab, level.m_res_lab))
-        ## TODO:get the total size (pxls) of each label (width*heigh)
-
         
         ## init the matches
         level.m_gt_match = [-1]*len(level.m_gt_lab)
         level.m_res_match = [set() for index in range(len(level.m_res_lab))]
 
-        #m_match_lineSize = len(level.m_gt_lab)
-        #level.m_match = new int[m_match_lineSize * level.m_res_lab.length];
-
-        ## TODO: calculate the intersection and fill level.m_match
-        # equiv of level.m_match[ level.gt_findLabel(gtLbl) + m_match_lineSize*level.res_findLabel(resLbl) ];
- 
         overlap = 0
-        #oids = fgt.index.get_level_values(1)
-        #hids = fdt.index.get_level_values(1)
        
         dists = self.iou_mat_util(df_gt.values, df_res.values)
         matches = np.argwhere(~np.isnan(dists))
-        #print(matches)
-        #print(type(matches))
-        #print(matches[:,0])
+
         level.m_gt_match = np.array(level.m_gt_match)
         level.m_gt_match[matches[:,0].astype(int)] = list(matches[:,1])
     
         [level.m_res_match[item[1]].add(item[0]) for item in matches]
-        #print("new = {}".format(level.m_res_match))
-        #level.m_res_match = [set() for index in range(len(level.m_res_lab))]
-        
-        #for item in matches:
-            #level.m_gt_match[item[0]] = item[1]
-         #   level.m_res_match[item[1]].add(item[0])
-        #print("old = {}".format(level.m_res_match))
-        '''
-        #print("level 1 gt = {}".format(level.m_gt_match))
-        #print("level 1 res = {}".format(level.m_res_match))
-        level.m_gt_match = [-1]*len(level.m_gt_lab)
-        level.m_res_match = [set() for index in range(len(level.m_res_lab))]
-        
-        for i in range(len(level.m_gt_lab)):
-            for j in range(len(level.m_res_lab)):
 
-                ## compute iou between gt lab and res lab
-                # get the label
-                gt_lab = level.m_gt_lab[i]
-                res_lab = level.m_res_lab[j]
-
-                # get the corresponding boxes for that label
-                gt_lab_box = df_gt[df_gt.index.get_level_values('Id')==gt_lab]
-                res_lab_box = df_res[df_res.index.get_level_values('Id')==res_lab]
-               
-                overlap= self.iou_mat_prep(gt_lab_box, res_lab_box)
-                #overlap = (float)level.m_match[i + m_match_lineSize*j];
-                #overlap /= (float)level.m_gt_size[i];
-                if (overlap > overlapRatio):
-                    
-                    #print("gt_box = {}, res_box = {}".format(gt_lab_box, res_lab_box))
-                    #print("overlap = {}, gt_label = {}, res_label = {}".format(overlap, gt_lab, res_lab))
-                    
-                    level.m_gt_match[i] = j
-                    level.m_res_match[j].add(i)
-                    break
-
-       
-        print("level.m_gt_match")
-        print(level.m_gt_match)
-        print("level.m_res_match")
-        print(level.m_res_match)
-        '''
         ## finally, #save the level
-        #self.levels.append(level)
         self.levels[time] = level
 
     ## TODO: Detect Forks
@@ -296,8 +232,6 @@ class TrackDataCache:
             if(len(kids)>1):
                 forks.append(Fork(key, kids))
             
-            
-
 
 
         
