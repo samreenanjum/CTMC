@@ -5,7 +5,7 @@
 
 Presented at the [Computer Vision for Microscopy Images (CVMI)](https://cvmi2020.github.io/accepted.html) workshop, [CVPR 2020](http://cvpr2020.thecvf.com/)
 
-This repository contains a Python implementation of the evaluation metric - TRA, inspired from the [Cell Tracking Challenge](https://github.com/CellTrackingChallenge/measures) and modified to support evaluation of tracking multiple objects with bounding boxes.
+This repository contains a Python implementation of the evaluation metric, TRA, inspired from the [Cell Tracking Challenge](https://github.com/CellTrackingChallenge/measures) and modified to support evaluation of tracking multiple objects with bounding boxes in videos.
 
 ## Challenge
 
