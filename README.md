@@ -13,6 +13,6 @@ We will hosting a challenge at the Computer Vision for Microscopy Images (CVMI) 
 
 ## Contact
 
-If you have any questions or require clarifications, please contact: [Samreen Anjum](https://www.ischool.utexas.edu/~samreen/) - samreen@utexas.edu
+If you have any questions or suggestions, please contact: [Samreen Anjum](https://www.ischool.utexas.edu/~samreen/) - samreen@utexas.edu
 
 
