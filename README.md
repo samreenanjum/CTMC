@@ -9,7 +9,7 @@ This repository contains a Python implementation of the evaluation metric, TRA, 
 
 ## Challenge
 
-We are hosting a challenge at the Computer Vision for Microscopy Images (CVMI) workshop at CVPR 2021. Details coming soon. 
+We will be hosting a challenge at the Computer Vision for Microscopy Images (CVMI) workshop at CVPR 2021. Details coming soon. 
 
 ## Contact
 
