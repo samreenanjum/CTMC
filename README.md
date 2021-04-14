@@ -11,13 +11,15 @@ This repository contains a Python implementation of the evaluation metric, TRA, 
 
 We are hosting a challenge at the Computer Vision for Microscopy Images (CVMI) workshop at CVPR 2021. This challenge is hosted on the MOT Challenge platform. 
 
-Results Format:
+#Results Format:
+
 Following the MOTChallenge guidelines, the file format should be the same as the ground truth file, which is a CSV text-file containing one object instance per line. Each line must contain 10 values:
 ```
 <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, -1, -1, -1, -1
 ```
 
-Evaluation:
+#Evaluation:
+
 The official code for evaluating is provided by the MOTChallenge team [here](https://github.com/JonathonLuiten/TrackEval/tree/master/docs/MOTChallenge-Official). 
 The script to run the evaluation code on the CTMC dataset can be found [here](https://github.com/samreenanjum/CTMC/blob/master/HOTA-metrics/scripts/run_ctmc.py).
 
