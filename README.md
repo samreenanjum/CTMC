@@ -9,7 +9,7 @@ This repository contains a Python implementation of the evaluation metric, TRA, 
 
 ## Challenge
 
-We are hosting a challenge at the Computer Vision for Microscopy Images (CVMI) workshop at CVPR 2021. This challenge is hosted on the MOT Challenge platform. 
+We are hosting a challenge at the Computer Vision for Microscopy Images (CVMI) workshop at CVPR 2021. This challenge is hosted on the [MOTChallenge](https://motchallenge.net/data/CTMC-v1/) platform. Each participant will have to [create an account](https://motchallenge.net/login/) to submit their results. 
 
 Results Format:
 
@@ -20,7 +20,7 @@ Following the MOTChallenge guidelines, the file format should be the same as the
 
 Evaluation:
 
-The official code for evaluating is provided by the MOTChallenge team [here](https://github.com/JonathonLuiten/TrackEval/tree/master/docs/MOTChallenge-Official). 
+The official code for evaluating the tracker is provided by the MOTChallenge team [here](https://github.com/JonathonLuiten/TrackEval/tree/master/docs/MOTChallenge-Official). 
 The script to run the evaluation code on the CTMC dataset can be found [here](https://github.com/samreenanjum/CTMC/blob/master/HOTA-metrics/scripts/run_ctmc.py).
 
 
