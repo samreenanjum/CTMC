@@ -13,7 +13,7 @@ We are hosting a challenge at the Computer Vision for Microscopy Images (CVMI) w
 
 Results Format:
 
-Following the MOTChallenge guidelines, the file format should be the same as the ground truth file, which is a CSV text-file containing one object instance per line. Each line must contain 10 values:
+Following the MOTChallenge [guidelines](https://motchallenge.net/instructions/), the file format should be the same as the ground truth file, which is a CSV text-file containing one object instance per line. Each line must contain 10 values:
 ```
 <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, -1, -1, -1, -1
 ```
